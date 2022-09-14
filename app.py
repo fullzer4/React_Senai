@@ -3,7 +3,7 @@ from flask_restful import Api
 from resources.hotel import Hoteis, Hotel
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] =  'sqlite:///bancochillplace.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bancoChillplace.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 api = Api(app)
 
