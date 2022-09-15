@@ -1,30 +1,6 @@
 from flask_restful import Resource, reqparse
 from models.hotel import HotelModel
-
-hoteis = [
-    {
-        'hotel_id':'alpha',
-        'nome':'Alpha Hotel',
-        'estrelas': 4.2,
-        'diaria' : 280,
-        'cidade' : 'Florianopolis',
-    },
-    {
-        'hotel_id':'bravo',
-        'nome':'Bravo Hotel',
-        'estrelas': 3.8,
-        'diaria' : 200,
-        'cidade' : 'Florianopolis',
-    },
-    {
-        'hotel_id':'luxo',
-        'nome':'hotel_luxo',
-        'estrelas': 5,
-        'diaria' : 280,
-        'cidade' : 'Sao Paulo',
-    }
-
-]
+from flask_jwt_extended import jwt_required
 
 class Hoteis(Resource):
     def get(self):
@@ -43,6 +19,7 @@ class Hotel(Resource):
             return hotel.json()
         return {'message': 'Hotel not found'}, 404
 
+    @jwt_required()
     def post(self, hotel_id):
         if HotelModel.find_hotel(hotel_id):
             return {"message":"Hotel id '{}' already exists.".format(hotel_id)}, 400
@@ -55,6 +32,7 @@ class Hotel(Resource):
             return {'message' : 'An internal error ocurred  trying to save hotel.'}, 500
         return hotel.json()
 
+    @jwt_required()
     def put(self, hotel_id):
         dados = Hotel.argumentos.parse_args()
         hotel = HotelModel(hotel_id, **dados)
@@ -66,9 +44,10 @@ class Hotel(Resource):
             return hotel_encontrado.json(), 200 #atualizado
         hotel = HotelModel(hotel_id, **dados)
         hotel.save_hotel()
-        hoteis.append(hotel)
+        Hoteis.append(hotel)
         return hotel.json(), 201 #criado
 
+    @jwt_required()
     def delete(self, hotel_id):
         hotel = HotelModel.find_hotel(hotel_id)
         if hotel:
