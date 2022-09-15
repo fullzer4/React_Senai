@@ -1,7 +1,7 @@
-from lib2to3.pgen2 import token
-from venv import create
 from flask_restful import Resource, reqparse
 from models.usuario import UserModel
+from flask_jwt_extended import create_access_token
+from werkzeug.security import safe_str_cmp
 
 class User(Resource):
 
