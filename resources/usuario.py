@@ -1,3 +1,5 @@
+from lib2to3.pgen2 import token
+from venv import create
 from flask_restful import Resource, reqparse
 from models.usuario import UserModel
 
@@ -19,4 +21,27 @@ class User(Resource):
             return {'message' : 'User deleted.'}
         return {'message' : 'User not found'}, 404
 
-    
+atributos = reqparse.RequestParser()
+atributos.add_argument('login', type=str, required=True, help="The field 'login' cannot be left blank.")
+atributos.add_argument('senha', type=str, required=True, help="The field 'senha' cannot be left blank.")
+
+class UserRegister(Resource):
+    def post(self):
+        dados = atributos.parse_args()
+
+        if UserModel.find_by_login(dados['login']):
+            return {"message" : "The login '{}' already exists".format(dados["login"])}
+        user = UserModel(**dados)
+        user.save_user()
+        return {"message": "user created"}, 201
+
+class UserLogin(Resource):
+    @classmethod
+    def post(cls):
+        dados = atributos.parse_args()
+
+        user = UserModel.find_by_login(dados["login"])
+        if user and safe_str_cmp(user.senha, dados["senha"]):
+            token_de_acesso = create_access_token(identity=user.user_id)
+            return {"access_token": token_de_acesso}, 200
+        return {"message":"The username or password is incorret"}, 401
