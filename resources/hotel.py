@@ -75,7 +75,7 @@ class Hotel(Resource):
             try:
                 hotel.delete_hotel()
             except:
-                return {'message' : 'An error has ocurred when try to delete hotel.'}, 500
+                return {'message' : 'An error has ocurred when try to delete hotel.'},
             return {'message' : 'Hotel deleted.'}
         return {'message' : 'Hotel not found'}, 404
 
