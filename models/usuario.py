@@ -2,6 +2,7 @@ from sql_alchemy import banco
 
 class UserModel(banco.Model):
     __tablename__ = 'usuarios'
+
     user_id = banco.Column(banco.Integer, primary_key=True)
     login = banco.Column(banco.String(40))
     senha = banco.Column(banco.String(40))
@@ -9,12 +10,12 @@ class UserModel(banco.Model):
     def __init__(self, login, senha):
         self.login = login
         self.senha = senha
-    
+
     def json(self):
         return {
             'user_id': self.user_id,
-            'login': self.login,
-        }
+            'login': self.login
+            }
 
     @classmethod
     def find_user(cls, user_id):
@@ -22,7 +23,7 @@ class UserModel(banco.Model):
         if user:
             return user
         return None
-    
+
     @classmethod
     def find_by_login(cls, login):
         user = cls.query.filter_by(login=login).first()
