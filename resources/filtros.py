@@ -21,3 +21,13 @@ def normalize_path_params(cidade=None,
         'diaria_max': diaria_max,
         'limit': limit,
         'offset': offset}
+
+consulta_sem_cidade = "SELECT * FROM hoteis \
+WHERE (estrelas >= %s and estrelas <= %s) \
+and (diaria >= %s and diaria <= %s) \
+LIMIT %s OFFSET %s"
+
+consulta_com_cidade = "SELECT * FROM hoteis \
+WHERE (estrelas >= %s and estrelas <= %s) \
+and (diaria >= %s and diaria <= %s) \
+and cidade = %s LIMIT %s OFFSET %s"
